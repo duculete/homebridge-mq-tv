@@ -12,37 +12,52 @@ You can use this plugin with ESP8266/ESP32 IR Blaster (link to be added).
    - **getActiveInput**: the plugin gets the actual active input on TV from this topic; ESPxx/TV should publish here 
    - **setRemoteKey**: used for apple Remote in lockscreen - the plugin will send the key pressed (ex: INFO, SELECT, VOLUME_UP); ESPxx/TV should get the key name from this topic and "execute" the command.
 ## Optional:   
-   inputs:[]    
+   - **inputs**:list of a TV inputs (hdmi, netflix app, etc ...)    
+   - **pinghost**: set props for checking if TV is ON via ping its ip address (if the configured ip responds to ping, the plugin will mark this TV accesory as Active (powerd on))
 
 ## Example config: 
 ```
 {
-    "platform": "MqttTelevision",
-    "name": "TV",
-    "mqtt": {
-        "server": "192.168.1.2",
-        "port": 1883,
-        "username:": "",
-        "password"
-    },
-    "setActive": "home/living/tv/cmd/power",
-    "getActive": "home/living/tv/power",
-    "setActiveInput": "home/living/tv/cmd/input",
-    "getActiveInput": "home/living/tv/input",
-    "setRemoteKey": "home/living/tv/cmd/remote",
-    "inputs": [
-        {
+            "platform": "MqttTelevision",
             "name": "TV",
-            "value": "TV"
-        },
-        {
-            "name": "Media",
-            "value": "HDMI1"
-        },
-        {
-            "name": "NVR Camera",
-            "value": "HDMI3"
+            "mqtt": {
+                "server": "1.1.1.2",
+                "port": 1883
+            },
+            "pinghost": {
+                "ip": "1.1.1.1",
+                "interval": 3000
+            },
+            "setActive": "home/tv/cmd/power",
+            "getActive": "home/tv/power",
+            "setActiveInput": "home/tv/cmd/input",
+            "getActiveInput": "home/tv/input",
+            "setRemoteKey": "home/tv/cmd/remote",
+            "inputs": [
+                {
+                    "name": "TV",
+                    "value": "TV"
+                },
+                {
+                    "name": "Media",
+                    "value": "HDMI1"
+                },
+                {
+                    "name": "Camera",
+                    "value": "HDMI3"
+                },
+                {
+                    "name": "News",
+                    "value": "tv_news"
+                },
+                {
+                    "name": "Comedy",
+                    "value": "comedy"
+                },
+                {
+                    "name": "BBC Earth",
+                    "value": "bbcearth"
+                }
+            ]
         }
-    ]
-}
 ```
