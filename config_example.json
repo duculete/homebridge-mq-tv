@@ -1,0 +1,59 @@
+{
+    "bridge": {
+        "name": "Homebridge-dev",
+        "username": "1A:BC:7C:34:25:B8",
+        "port": 51543,
+        "pin": "111-11-111"
+    },
+    "accessories": [],
+    "platforms": [
+        {
+            "name": "Config",
+            "port": 8582,
+            "platform": "config"
+        },
+        {
+            "platform": "MqttTelevision",
+            "name": "TV",
+            "mqtt": {
+                "server": "1.1.1.2",
+                "port": 1883
+            },
+            "pinghost": {
+                "ip": "1.1.1.1",
+                "interval": 3000
+            },
+            "setActive": "home/tv/cmd/power",
+            "getActive": "home/tv/power",
+            "setActiveInput": "home/tv/cmd/input",
+            "getActiveInput": "home/tv/input",
+            "setRemoteKey": "home/tv/cmd/remote",
+            "inputs": [
+                {
+                    "name": "TV",
+                    "value": "TV"
+                },
+                {
+                    "name": "Media",
+                    "value": "HDMI1"
+                },
+                {
+                    "name": "Camera",
+                    "value": "HDMI3"
+                },
+                {
+                    "name": "News",
+                    "value": "tv_news"
+                },
+                {
+                    "name": "Comedy",
+                    "value": "comedy"
+                },
+                {
+                    "name": "BBC Earth",
+                    "value": "bbcearth"
+                }
+            ]
+        }
+    ]
+}
