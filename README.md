@@ -1,6 +1,6 @@
 # homebridge-mqtt-television
 
-### ...the other end (aka TV controller)
+### and for ... the other end (aka TV controller)
 You can use this plugin with ESP8266/ESP32 IR Blaster (https://github.com/duculete/ESPSmartTV).
 
 ## Required:    
