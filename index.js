@@ -60,7 +60,7 @@ class TVPlatform {
 
         // set sleep discovery characteristic
         tvService.setCharacteristic(this.Characteristic.SleepDiscoveryMode, this.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
-        var power = this.tvService
+        var power = tvService
             .getCharacteristic(Characteristic.Active);
         try {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
