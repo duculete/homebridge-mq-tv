@@ -73,6 +73,8 @@ class TVPlatform {
                             if (res.alive) {
                                 ping_resp = 1;
                             }
+                            tvService
+                                .getCharacteristic(Characteristic.Active).updateValue(this.ping_resp);
                             console.log("Ping status " + ping_resp);
                             power.updateValue(this.ping_resp);
                         });
