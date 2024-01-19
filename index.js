@@ -74,7 +74,7 @@ class TVPlatform {
                             } else {
                                 var ping_resp = res.alive ? 1 : 0;
                                 this.log.error('Ping status [' + this.pinghost.ip + "]: " + res.toString());
-                                that.tvService.getCharacteristic(Characteristic.Active).updateValue(ping_resp);
+                                tvService.updateCharacteristic(this.Characteristic.Active, ping_resp);
                             }
                         });
                 }, this.pinghost.interval || 30000);
