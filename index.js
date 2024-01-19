@@ -69,9 +69,9 @@ class TVPlatform {
                 setInterval(() => {
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
-                            this.ping_resp = 0;
+                            var ping_resp = 0;
                             if (res.alive) {
-                                this.ping_resp = 1;
+                                ping_resp = 1;
                             }
                             console.log("Ping status " + this.ping_resp);
                             power.updateValue(this.ping_resp);
