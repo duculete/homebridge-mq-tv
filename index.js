@@ -66,14 +66,13 @@ class TVPlatform {
             this.mqttClient.publish(getActiveInputTopic, "");
             if (this.pinghost) {
                 setInterval(() => {
-                    this.log("Pinghost enabled: " + this.pinghost.ip);
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
                             if (err) {
                                 console.log(["ping error " + err.toString()]);
                             } else {
                                 var ping_resp = res.alive ? 1 : 0;
-                                this.log.error('Ping status [' + this.pinghost.ip + "]: " + res.toString());
+                                that.log.error('Ping status [' + this.pinghost.ip + "]: " + res.toString());
                                 tvService.updateCharacteristic(this.Characteristic.Active, ping_resp);
                             }
                         });
