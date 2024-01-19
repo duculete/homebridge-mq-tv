@@ -73,7 +73,7 @@ class TVPlatform {
                             if (res.alive) {
                                 ping_resp = 1;
                             }
-                            console.log("Ping status " + this.ping_resp);
+                            console.log("Ping status " + ping_resp);
                             power.updateValue(this.ping_resp);
                         });
                 }, this.pinghost.interval || 30000);
