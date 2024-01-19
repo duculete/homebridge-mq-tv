@@ -47,6 +47,7 @@ class TVPlatform {
             if (this.pinghost) {
                 this.log("Pinghost enabled: " + this.pinghost.ip);
                 setInterval(() => {
+                    this.log("Pinghost enabled: " + this.pinghost.ip);
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
                             var ping_resp = res.alive ? 1 : 0;
@@ -56,7 +57,6 @@ class TVPlatform {
                             that.mqttClient.publish(getActiveInputTopic, ping_resp);
                         });
                 }, this.pinghost.interval || 30000);
-
             } else {
                 this.mqttClient.subscribe(getActiveTopic);
             }
