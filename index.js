@@ -68,14 +68,12 @@ class TVPlatform {
                 setInterval(() => {
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
-                            console.log(res);
-                            if (err) {
-                                console.log("ping error " + err.toString());
-                            } else {
-                                var ping_resp = res.alive ? 1 : 0;
-                                console.log('Ping status [' + this.pinghost.ip + "]: " + res.toString());
-                                that.tvService.updateCharacteristic(this.Characteristic.Active, ping_resp);
+                            var ping_resp = 0;
+                            if (res.alive) {
+                                ping_resp = 1;
                             }
+                            console.log('Ping status [' + this.pinghost.ip + "]: " + res.toString());
+                            that.tvService.updateCharacteristic(this.Characteristic.Active, ping_resp);
                         });
                 }, this.pinghost.interval || 30000);
             } else {
