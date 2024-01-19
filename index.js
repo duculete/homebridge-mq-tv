@@ -76,7 +76,7 @@ class TVPlatform {
                             }
                             tvService
                                 .getCharacteristic(Characteristic.Active).updateValue(ping_resp);
-
+                            mqttClient.publish(getActiveTopic, ping_resp.toString());
                             // console.log("Ping status " + ping_resp);
                             // power.updateValue(this.ping_resp);
                         });
