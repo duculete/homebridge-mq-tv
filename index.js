@@ -51,10 +51,10 @@ class TVPlatform {
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
                             var ping_resp = res.alive ? 1 : 0;
-                            that.log.error('Ping status [' + this.pinghost.ip + "]: " + res.toString());
+                            this.log.error('Ping status [' + this.pinghost.ip + "]: " + res.toString());
                             tvService
                                 .getCharacteristic(Characteristic.Active).updateValue((ping_resp));
-                            that.mqttClient.publish(getActiveInputTopic, ping_resp);
+                            this.mqttClient.publish(getActiveInputTopic, ping_resp);
                         });
                 }, this.pinghost.interval || 30000);
             } else {
