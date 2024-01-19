@@ -28,7 +28,7 @@ class TVPlatform {
         var mqttPassword = mqttCfg && mqttCfg['password'] || "";
         const inputList = this.config.inputs || [];
         this.pinghost = config.pinghost;
-        var power = this.tvService.getCharacteristic(Characteristic.Active);
+
         var mqttOptions = {
             clientId: 'mqtt_tv_' + Math.random().toString(16).substring(2, 8),
             username: mqttUsername,
@@ -58,7 +58,7 @@ class TVPlatform {
 
         // set sleep discovery characteristic
         tvService.setCharacteristic(this.Characteristic.SleepDiscoveryMode, this.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
-
+        var power = this.tvService.getCharacteristic(Characteristic.Active);
         try {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
             this.mqttClient.publish(getActiveInputTopic, "");
