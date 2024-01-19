@@ -43,8 +43,6 @@ class TVPlatform {
 
         try {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
-            this.mqttClient.subscribe(getActiveTopic);
-            this.mqttClient.subscribe(getActiveInputTopic);
             this.mqttClient.publish(getActiveInputTopic, "");
             if (this.pinghost) {
                 setInterval(() => {
@@ -55,7 +53,10 @@ class TVPlatform {
                                 .getCharacteristic(Characteristic.Active).updateValue((ping_resp));
                         });
                 }, this.pinghost.interval || 30000);
-            };
+
+            } else {
+                this.mqttClient.subscribe(getActiveTopic);
+            }
         } catch (e) {
             this.log.error('Error connecting to MQTT/ping:' + e.toString());
         };
