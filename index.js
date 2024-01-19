@@ -67,7 +67,7 @@ class TVPlatform {
             this.mqttClient.publish(getActiveInputTopic, "");
             if (this.pinghost) {
                 setInterval(() => {
-                    this.mqttClient.publish(setActiveInputTopic, "DISABLE_STATUS_CHECK");
+                    this.mqttClient.publish(setActiveTopic, "DISABLE_STATUS_CHECK");
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
                             var ping_resp = 0;
