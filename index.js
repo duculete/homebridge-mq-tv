@@ -56,6 +56,8 @@ class TVPlatform {
         // set the tv name
         tvService.setCharacteristic(this.Characteristic.ConfiguredName, tvName);
 
+        tvService.setCharacteristic(this.Characteristic.ActiveIdentifier, 1);
+
         // set sleep discovery characteristic
         tvService.setCharacteristic(this.Characteristic.SleepDiscoveryMode, this.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
         var power = this.tvService.getCharacteristic(Characteristic.Active);
@@ -115,8 +117,6 @@ class TVPlatform {
                     this.mqttClient.publish(setActiveTopic, newValue.toString());
                 }
             });
-
-        tvService.setCharacteristic(this.Characteristic.ActiveIdentifier, 1);
 
         // handle input source changes
         tvService.getCharacteristic(this.Characteristic.ActiveIdentifier)
