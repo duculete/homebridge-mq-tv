@@ -28,7 +28,7 @@ class TVPlatform {
         var mqttPassword = mqttCfg && mqttCfg['password'] || "";
         const inputList = this.config.inputs || [];
         this.pinghost = config.pinghost;
-
+        var that = this;
         var mqttOptions = {
             clientId: 'mqtt_tv_' + Math.random().toString(16).substring(2, 8),
             username: mqttUsername,
@@ -49,8 +49,10 @@ class TVPlatform {
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
                             var ping_resp = res.alive ? 1 : 0;
+                            that.log.error('Ping status [' + this.pinghost.ip + "]: " + res.toString());
                             tvService
                                 .getCharacteristic(Characteristic.Active).updateValue((ping_resp));
+                            that.mqttClient.publish(getActiveInputTopic, ping_resp);
                         });
                 }, this.pinghost.interval || 30000);
 
