@@ -60,8 +60,7 @@ class TVPlatform {
 
         // set sleep discovery characteristic
         tvService.setCharacteristic(this.Characteristic.SleepDiscoveryMode, this.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
-        // var that = this
-
+        var that = this;
         try {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
             this.mqttClient.publish(getActiveInputTopic, "");
@@ -76,7 +75,7 @@ class TVPlatform {
                             }
                             tvService
                                 .getCharacteristic(Characteristic.Active).updateValue(ping_resp);
-                            mqttClient.publish(getActiveTopic, ping_resp.toString());
+                            that.mqttClient.publish(getActiveTopic, ping_resp.toString());
                             // console.log("Ping status " + ping_resp);
                             // power.updateValue(this.ping_resp);
                         });
