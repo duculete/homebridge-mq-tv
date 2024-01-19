@@ -60,7 +60,8 @@ class TVPlatform {
 
         // set sleep discovery characteristic
         tvService.setCharacteristic(this.Characteristic.SleepDiscoveryMode, this.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
-        var that = this;
+        var powerModeSelection = this.tvService
+            .getCharacteristic(Characteristic.PowerModeSelection);
         try {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
             this.mqttClient.publish(getActiveInputTopic, "");
@@ -68,12 +69,12 @@ class TVPlatform {
                 setInterval(() => {
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
-                            var ping_resp = 0;
+                            this.ping_resp = 0;
                             if (res.alive) {
                                 ping_resp = 1;
                             }
-                            console.log("Ping status " + res);
-                            that.tvService.updateCharacteristic(this.Characteristic.Active, ping_resp);
+                            console.log("Ping status " + this.ping_resp);
+                            power.updateValue(this.ping_resp);
                         });
                 }, this.pinghost.interval || 30000);
             } else {
