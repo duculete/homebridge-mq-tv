@@ -66,8 +66,8 @@ class TVPlatform {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
             this.mqttClient.publish(getActiveInputTopic, "");
             if (this.pinghost) {
-                this.mqttClient.publish(setActiveInputTopic, "DISABLE_STATUS_CHECK");
                 setInterval(() => {
+                    this.mqttClient.publish(setActiveInputTopic, "DISABLE_STATUS_CHECK");
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
                             var ping_resp = 0;
@@ -77,7 +77,7 @@ class TVPlatform {
                             tvService
                                 .getCharacteristic(Characteristic.Active).updateValue(ping_resp);
 
-                            console.log("Ping status " + ping_resp);
+                            // console.log("Ping status " + ping_resp);
                             // power.updateValue(this.ping_resp);
                         });
                 }, this.pinghost.interval || 30000);
