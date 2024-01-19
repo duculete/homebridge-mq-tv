@@ -72,7 +72,7 @@ class TVPlatform {
                             if (res.alive) {
                                 ping_resp = 1;
                             }
-                            console.log('Ping status [' + this.pinghost.ip + "]: " + res);
+                            console.log("Ping status " + res);
                             that.tvService.updateCharacteristic(this.Characteristic.Active, ping_resp);
                         });
                 }, this.pinghost.interval || 30000);
