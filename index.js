@@ -68,8 +68,9 @@ class TVPlatform {
                 setInterval(() => {
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
+                            console.log(res);
                             if (err) {
-                                console.log(["ping error " + err.toString()]);
+                                console.log("ping error " + err.toString());
                             } else {
                                 var ping_resp = res.alive ? 1 : 0;
                                 console.log('Ping status [' + this.pinghost.ip + "]: " + res.toString());
