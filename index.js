@@ -28,8 +28,7 @@ class TVPlatform {
         var mqttPassword = mqttCfg && mqttCfg['password'] || "";
         const inputList = this.config.inputs || [];
         this.pinghost = config.pinghost;
-        var power = this.tvService
-            .getCharacteristic(Characteristic.Active);
+        var power = this.tvService.getCharacteristic(Characteristic.Active);
         var mqttOptions = {
             clientId: 'mqtt_tv_' + Math.random().toString(16).substring(2, 8),
             username: mqttUsername,
@@ -41,6 +40,24 @@ class TVPlatform {
         const setActiveInputTopic = this.config.setActiveInput || "";
         const getActiveInputTopic = this.config.getActiveInput || "";
         const setRemoteKeyTopic = this.config.setRemoteKey || "";
+
+        // generate a UUID
+        const uuid = this.api.hap.uuid.generate('homebridge:mq-tv-' + tvName);
+
+        // create the accessory
+        this.tvAccessory = new api.platformAccessory(tvName, uuid);
+
+        // set the accessory category
+        this.tvAccessory.category = this.api.hap.Categories.TELEVISION;
+
+        // add the tv service
+        const tvService = this.tvAccessory.addService(this.Service.Television);
+
+        // set the tv name
+        tvService.setCharacteristic(this.Characteristic.ConfiguredName, tvName);
+
+        // set sleep discovery characteristic
+        tvService.setCharacteristic(this.Characteristic.SleepDiscoveryMode, this.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
 
         try {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
@@ -66,24 +83,6 @@ class TVPlatform {
             this.log.error('Error connecting to MQTT/ping:' + e.toString());
         };
 
-        // generate a UUID
-        const uuid = this.api.hap.uuid.generate('homebridge:mq-tv-' + tvName);
-
-        // create the accessory
-        this.tvAccessory = new api.platformAccessory(tvName, uuid);
-
-        // set the accessory category
-        this.tvAccessory.category = this.api.hap.Categories.TELEVISION;
-
-        // add the tv service
-        const tvService = this.tvAccessory.addService(this.Service.Television);
-
-        // set the tv name
-        tvService.setCharacteristic(this.Characteristic.ConfiguredName, tvName);
-
-        // set sleep discovery characteristic
-        tvService.setCharacteristic(this.Characteristic.SleepDiscoveryMode, this.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
-
         this.mqttClient.on('message', (topic, message) => {
 
             if (topic == getActiveTopic) {
@@ -107,6 +106,7 @@ class TVPlatform {
             }
 
         });
+
 
         // handle on / off events using the Active(POWER) characteristic
         tvService.getCharacteristic(this.Characteristic.Active)
