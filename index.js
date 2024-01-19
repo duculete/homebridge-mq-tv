@@ -45,6 +45,7 @@ class TVPlatform {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
             this.mqttClient.publish(getActiveInputTopic, "");
             if (this.pinghost) {
+                this.log("Pinghost enabled: " + this.pinghost.ip);
                 setInterval(() => {
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
