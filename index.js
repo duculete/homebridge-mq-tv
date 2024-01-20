@@ -99,7 +99,7 @@ class TVPlatform {
             if (topic == settingsTopic) {
                 var msg = message.toString();
                 if (msg == "") {
-                    this.log.error('Settings requested!');
+                    this.log.info('Settings requested!');
                     if (this.pinghost) {
                         this.mqttClient.publish(settingsTopic, "DISABLE_STATUS_CHECK");
                     }
