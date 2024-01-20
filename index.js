@@ -108,7 +108,7 @@ class TVPlatform {
 
             if (topic == infoTopic) {
                 var msg = message.toString();
-                this.log.error('TV connected: ' + msg);
+                this.log.info('TV connected: ' + msg);
             }
 
             if (topic == getActiveInputTopic) {
