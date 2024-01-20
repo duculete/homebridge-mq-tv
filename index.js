@@ -1,5 +1,6 @@
 const mqtt = require("mqtt");
 const ping = require("ping");
+const packageJson = require('./package.json');
 
 const PLUGIN_NAME = 'homebridge-mq-tv';
 const PLATFORM_NAME = 'MqttTelevision';
@@ -28,6 +29,7 @@ class TVPlatform {
         var mqttPassword = mqttCfg && mqttCfg['password'] || "";
         const inputList = this.config.inputs || [];
         this.pinghost = config.pinghost;
+        this.model = config.tv && config.tv.mode || "Sony Bravia";
 
         var mqttOptions = {
             clientId: 'mqtt_tv_' + Math.random().toString(16).substring(2, 8),
@@ -54,6 +56,13 @@ class TVPlatform {
 
         // add the tv service
         const tvService = this.tvAccessory.addService(this.Service.Television);
+
+        var informationService = new Service.AccessoryInformation();
+        informationService.setCharacteristic(Characteristic.Manufacturer, packageJson.name);
+        informationService.setCharacteristic(Characteristic.Model, this.model);
+        informationService.setCharacteristic(Characteristic.SerialNumber, packageJson.version);
+
+        tvService.addService(informationService);
 
         // set the tv name
         tvService.setCharacteristic(this.Characteristic.ConfiguredName, tvName);
