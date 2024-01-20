@@ -19,22 +19,19 @@ You can use this plugin with ESP8266/ESP32 IR Blaster (https://github.com/ducule
 
 ## Example config: 
 ```
-{
-            "platform": "MqttTelevision",
+"platform": "MqttTelevision",
             "name": "TV",
             "mqtt": {
-                "server": "1.1.1.2",
+                "server": "192.168.1.11",
                 "port": 1883
-            },
-            "pinghost": {
-                "ip": "1.1.1.1",
-                "interval": 3000
             },
             "setActive": "home/tv/cmd/power",
             "getActive": "home/tv/power",
             "setActiveInput": "home/tv/cmd/input",
             "getActiveInput": "home/tv/input",
             "setRemoteKey": "home/tv/cmd/remote",
+            "settingsTopic": "home/tv/settings",
+            "infoTopic": "home/tv/info",
             "inputs": [
                 {
                     "name": "TV",
@@ -49,8 +46,12 @@ You can use this plugin with ESP8266/ESP32 IR Blaster (https://github.com/ducule
                     "value": "HDMI3"
                 },
                 {
-                    "name": "News",
+                    "name": "Digi News",
                     "value": "tv_news"
+                },
+                {
+                    "name": "ProTV",
+                    "value": "protv"
                 },
                 {
                     "name": "Comedy",
