@@ -28,6 +28,8 @@
             "setActiveInput": "home/tv/cmd/input",
             "getActiveInput": "home/tv/input",
             "setRemoteKey": "home/tv/cmd/remote",
+            "settingsTopic": "home/tv/settings",
+            "infoTopic": "home/tv/info",
             "inputs": [
                 {
                     "name": "TV",
