@@ -102,7 +102,7 @@
 					},
 					"value": {
 						"title": "TV Source input value",
-						"type": "boolean",
+						"type": "string",
 						"default": "hdmi1",
 						"description": "This value will be sent via mqtt using setActiveInput to TV; example: hdmi1, digitalTV, news_channel,netflix"
 					}
