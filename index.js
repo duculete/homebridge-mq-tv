@@ -40,6 +40,8 @@ class TVPlatform {
         const setActiveInputTopic = this.config.setActiveInput || "";
         const getActiveInputTopic = this.config.getActiveInput || "";
         const setRemoteKeyTopic = this.config.setRemoteKey || "";
+        const settingsTopic = this.config.settingsTopic || "";
+        const infoTopic = this.config.infoTopic || "";
 
         // generate a UUID
         const uuid = this.api.hap.uuid.generate('homebridge:mq-tv-' + tvName);
@@ -64,9 +66,11 @@ class TVPlatform {
         try {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
             this.mqttClient.publish(getActiveInputTopic, "");
+            this.mqttClient.subscribe(settingsTopic);
+            this.mqttClient.subscribe(infoTopic);
+
             if (this.pinghost) {
                 setInterval(() => {
-                    this.mqttClient.publish(setActiveTopic, "DISABLE_STATUS_CHECK");
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
                             var ping_resp = 0;
@@ -76,12 +80,10 @@ class TVPlatform {
                             tvService
                                 .getCharacteristic(Characteristic.Active).updateValue(ping_resp);
                             that.mqttClient.publish(getActiveTopic, ping_resp.toString());
-                            // console.log("Ping status " + ping_resp);
-                            // power.updateValue(this.ping_resp);
                         });
                 }, this.pinghost.interval || 30000);
             } else {
-                this.mqttClient.subscribe(getActiveTopic);
+
             }
         } catch (e) {
             this.log.error('Error connecting to MQTT/ping:' + e.toString());
@@ -92,6 +94,21 @@ class TVPlatform {
             if (topic == getActiveTopic) {
                 var msg = parseInt(message.toString());
                 tvService.updateCharacteristic(this.Characteristic.Active, msg);
+            }
+
+            if (topic == settingsTopic) {
+                var msg = message.toString();
+                if (msg == "") {
+                    this.log.error('Settings requested!');
+                    if (this.pinghost) {
+                        this.mqttClient.publish(settingsTopic, "DISABLE_STATUS_CHECK");
+                    }
+                }
+            }
+
+            if (topic == infoTopic) {
+                var msg = message.toString();
+                this.log.error('TV connected: ' + msg);
             }
 
             if (topic == getActiveInputTopic) {
@@ -110,7 +127,6 @@ class TVPlatform {
             }
 
         });
-
 
         // handle on / off events using the Active(POWER) characteristic
         tvService.getCharacteristic(this.Characteristic.Active)
