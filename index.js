@@ -57,12 +57,9 @@ class TVPlatform {
         // add the tv service
         const tvService = this.tvAccessory.addService(this.Service.Television);
 
-        var informationService = new Service.AccessoryInformation();
-        informationService.setCharacteristic(Characteristic.Manufacturer, packageJson.name);
-        informationService.setCharacteristic(Characteristic.Model, this.model);
-        informationService.setCharacteristic(Characteristic.SerialNumber, packageJson.version);
-
-        tvService.addService(informationService);
+        tvService.setCharacteristic(Characteristic.Manufacturer, packageJson.name);
+        tvService.setCharacteristic(Characteristic.Model, this.model);
+        tvService.setCharacteristic(Characteristic.SerialNumber, packageJson.version);
 
         // set the tv name
         tvService.setCharacteristic(this.Characteristic.ConfiguredName, tvName);
