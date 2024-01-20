@@ -3,7 +3,7 @@
 ### and for ... the other end (aka TV controller)
 You can use this plugin with ESP8266/ESP32 IR Blaster (https://github.com/duculete/ESPSmartTV).
 
-![HomeKit](./media/home_kit.jpg)
+![HomeKit](media/home_kit.png)
 
 ## Required:    
    - **name**: "name of accesory"
