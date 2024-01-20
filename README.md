@@ -3,6 +3,8 @@
 ### and for ... the other end (aka TV controller)
 You can use this plugin with ESP8266/ESP32 IR Blaster (https://github.com/duculete/ESPSmartTV).
 
+![alt text](https://github.com/duculete/homebridge-mqtt-television/media/home_kit.png?raw=true)
+
 ## Required:    
    - **name**: "name of accesory"
    - **mqtt**: "details about mqtt broker"
