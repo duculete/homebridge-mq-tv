@@ -12,16 +12,12 @@
             "port": 8582,
             "platform": "config"
         },
-        {
+       {
             "platform": "MqttTelevision",
             "name": "TV",
             "mqtt": {
-                "server": "1.1.1.2",
+                "server": "192.168.1.11",
                 "port": 1883
-            },
-            "pinghost": {
-                "ip": "1.1.1.1",
-                "interval": 3000
             },
             "setActive": "home/tv/cmd/power",
             "getActive": "home/tv/power",
@@ -44,8 +40,12 @@
                     "value": "HDMI3"
                 },
                 {
-                    "name": "News",
+                    "name": "Digi News",
                     "value": "tv_news"
+                },
+                {
+                    "name": "ProTV",
+                    "value": "protv"
                 },
                 {
                     "name": "Comedy",

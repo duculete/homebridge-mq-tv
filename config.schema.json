@@ -1,7 +1,7 @@
 {
 	"pluginAlias": "homebridge-mq-tv",
 	"pluginType": "platform",
-	"singular": true,
+	"singular": false,
 	"headerDisplay": "MQTT must be installed on your system",
 	"footerDisplay": "For help please see the [README](https://github.com/duculete/homebridge-television.git).",
 	"schema": {
@@ -30,15 +30,15 @@
 				"username": {
 					"title": "MQTT Username",
 					"type": "string",
-					"placeholder": "Your MQTT Broker username (optional)"
+					"placeholder": ""
 				},
 				"password": {
 					"title": "MQTT Password",
 					"type": "string",
-					"placeholder": "Your MQTT Broker password (optional)"
+					"placeholder": ""
 				},
 				"port": {
-					"title": "MQTT Broker listening port",
+					"title": "MQTT port",
 					"type": "integer",
 					"placeholder": "1883",
 					"default": true
@@ -47,43 +47,50 @@
 			}
 		},
 		"setActive": {
-			"title": "MQTT topic used to set the TV power state",
+			"title": "setActive topic",
+			"description": "topic used to set TV power state",
 			"type": "string",
 			"default": "home/tv/cmd/power",
 			"required": true
 		},
 		"getActive": {
-			"title": "MQTT topic used to get the TV power state",
+			"title": "getActive topic",
+			"description": "topic used to get TV power state",
 			"type": "string",
 			"default": "home/tv/power",
 			"required": true
 		},
 		"setActiveInput": {
-			"title": "MQTT topic used to set TV input (ex: HDMI 1)",
+			"title": "setActiveInput topic",
+			"description": "topic used to ask tv to switch input (ex hdmi1)",
 			"type": "string",
 			"default": "home/tv/cmd/input",
 			"required": true
 		},
 		"getActiveInput": {
-			"title": "MQTT topic used to get TV current TV sourcem input (ex: Netflix)",
+			"title": "getActiveInput topic",
+			"description": " topic used to get TV current source input (ex: Netflix)",
 			"type": "string",
 			"default": "home/tv/input",
 			"required": true
 		},
 		"setRemoteKey": {
-			"title": "MQTT topic used to sent TV Key pres (using Apple Remote in status bar)",
+			"title": "setRemoteKey topic",
+			"description": "topic used to sent TV remote key events (using Apple Remote in status bar)",
 			"type": "string",
 			"default": "home/tv/cmd/remote",
 			"required": false
 		},
 		"settingsTopic": {
-			"title": "MQTT topic used to sync settings between plugin and ESP8266 controller",
+			"title": "settingsTopic topic",
+			"description": "topic used to sync settings between plugin and ESP8266 controller",
 			"type": "string",
 			"default": "home/tv/settings",
 			"required": false
 		},
 		"infoTopic": {
-			"title": "MQTT topic used by ESP8266 controller to print extra info",
+			"title": "infoTopic topic",
+			"description": "topic used by ESP8266 controller to print extra info",
 			"type": "string",
 			"default": "home/tv/info",
 			"required": false
@@ -95,16 +102,16 @@
 				"type": "object",
 				"properties": {
 				    "name": {
-						"title": "TV Source Input name",
+						"title": "Name",
 						"type": "string",
-						"default": "Input 1",
-						"description": "Input name (as it will appear in HomeKit App, ex: Nextflix, HDMI 1, News Channel)"
+						"default": "",
+						"description": "input name (as it will appear in HomeKit App, ex: Nextflix, HDMI 1, News Channel)"
 					},
 					"value": {
-						"title": "TV Source input value",
+						"title": "Value",
 						"type": "string",
-						"default": "hdmi1",
-						"description": "This value will be sent via mqtt using setActiveInput to TV; example: hdmi1, digitalTV, news_channel,netflix"
+						"default": "",
+						"description": "will be sent via mqtt using setActiveInput to TV/EXP8266; example: hdmi1, digitalTV, news_channel,netflix"
 					}
 				}
 			}
