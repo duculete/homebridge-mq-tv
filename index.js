@@ -68,6 +68,7 @@ class TVPlatform {
             this.mqttClient.publish(getActiveInputTopic, "");
             this.mqttClient.subscribe(settingsTopic);
             this.mqttClient.subscribe(infoTopic);
+            this.mqttClient.subscribe(getActiveInputTopic);
 
             if (this.pinghost) {
                 this.mqttClient.publish(settingsTopic, "DISABLE_STATUS_CHECK");
