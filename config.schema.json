@@ -46,6 +46,23 @@
 
 			}
 		},
+		"pinghost": {
+			"title": "Ping TV IP",
+			"type": "object",
+			"properties": {
+				"ip": {
+					"title": "IP Address",
+					"type": "string",
+					"placeholder": "e.g. 192.168.1.yyy"
+				},
+				"interval": {
+					"title": "Ping interval in ms",
+					"type": "integer",
+					"placeholder": "3000"
+				}
+
+			}
+		},
 		"setActive": {
 			"title": "setActive topic",
 			"description": "topic used to set TV power state",
@@ -168,6 +185,15 @@
 						}
 					]
 				}
+			]
+		},
+				{
+			"type": "fieldset",
+			"expandable": true,
+			"title": "Ping TV IP Address",
+			"items": [
+				"pinghost.ip",
+				"pinghost.interval"
 			]
 		},
 		{
