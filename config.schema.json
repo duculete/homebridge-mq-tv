@@ -3,7 +3,7 @@
 	"pluginType": "platform",
 	"singular": false,
 	"headerDisplay": "MQTT must be installed on your system",
-	"footerDisplay": "For help please see the [README](https://github.com/duculete/homebridge-television.git).",
+	"footerDisplay": "For help please see the [README](https://github.com/duculete/homebridge-mq-tv).",
 	"schema": {
 		"name": {
 			"title": "Name",
