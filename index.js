@@ -27,15 +27,15 @@ class TVPlatform {
         var mqttHost = "mqtt://" + (mqttCfg && mqttCfg['server'] || "127.0.0.1") + ":" + (mqttCfg && mqttCfg['port'] || "1883");
         var mqttUsername = mqttCfg && mqttCfg['username'] || "";
         var mqttPassword = mqttCfg && mqttCfg['password'] || "";
-        const inputList = this.config.inputs || [];
-        this.pinghost = config.pinghost;
-        this.model = config.tv && config.tv.mode || "Sony Bravia";
-
         var mqttOptions = {
             clientId: 'mqtt_tv_' + Math.random().toString(16).substring(2, 8),
             username: mqttUsername,
             password: mqttPassword
         };
+
+        const inputList = this.config.inputs || [];
+        this.pinghost = config.pinghost;
+        this.model = config.model || "Custom MQTT TV";
 
         const setActiveTopic = this.config.setActive || "";
         const getActiveTopic = this.config.getActive || "";
@@ -44,6 +44,11 @@ class TVPlatform {
         const setRemoteKeyTopic = this.config.setRemoteKey || "";
         const settingsTopic = this.config.settingsTopic || "";
         const infoTopic = this.config.infoTopic || "";
+
+        if (!setActiveTopic || !getActiveTopic || !setActiveInputTopic || !getActiveInputTopic || !setRemoteKeyTopic || !settingsTopic || !infoTopic) {
+            this.log("There is no MQTT topic configured for the TV " + tvName + ". Please check your configuration.");
+            return false;
+        }
 
         // generate a UUID
         const uuid = this.api.hap.uuid.generate('homebridge:mq-tv-' + tvName);
@@ -69,6 +74,7 @@ class TVPlatform {
         // set sleep discovery characteristic
         tvService.setCharacteristic(this.Characteristic.SleepDiscoveryMode, this.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
         var that = this;
+
         try {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
             this.mqttClient.publish(getActiveInputTopic, "");
@@ -81,13 +87,18 @@ class TVPlatform {
                 setInterval(() => {
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
-                            var ping_resp = 0;
-                            if (res.alive) {
-                                ping_resp = 1;
+                            if (err) {
+                                that.log.error('Error pinging TV ' + tvName + ": " + err.toString());
+                                return;
+                            } else {
+                                var ping_resp = 0;
+                                if (res.alive) {
+                                    ping_resp = 1;
+                                }
+                                tvService
+                                    .getCharacteristic(Characteristic.Active).updateValue(ping_resp);
+                                that.mqttClient.publish(getActiveTopic, ping_resp.toString());
                             }
-                            tvService
-                                .getCharacteristic(Characteristic.Active).updateValue(ping_resp);
-                            that.mqttClient.publish(getActiveTopic, ping_resp.toString());
                         });
                 }, this.pinghost.interval || 30000);
             } else {
@@ -95,6 +106,7 @@ class TVPlatform {
             }
         } catch (e) {
             this.log.error('Error connecting to MQTT/ping:' + e.toString());
+            return false;
         };
 
         this.mqttClient.on('message', (topic, message) => {
@@ -243,19 +255,17 @@ class TVPlatform {
          * is sent to the TV Service ActiveIdentifier Characteristic handler.
          */
 
-
-        const activeServices = {};
+        const activeServices = [];
 
         for (var i = 0; i < inputList.length; i++) {
-
             var val = inputList[i]['value'].toString();
-            activeServices[val] = this.tvAccessory.addService(this.Service.InputSource, inputList[i]['value'].toString(), inputList[i]['name'].toString());
-            activeServices[val]
+            activeServices[i] = this.tvAccessory.addService(this.Service.InputSource, inputList[i]['value'].toString(), inputList[i]['name'].toString());
+            activeServices[i]
                 .setCharacteristic(this.Characteristic.Identifier, i + 1)
                 .setCharacteristic(this.Characteristic.ConfiguredName, inputList[i]['name'].toString())
                 .setCharacteristic(this.Characteristic.IsConfigured, this.Characteristic.IsConfigured.CONFIGURED)
                 .setCharacteristic(this.Characteristic.InputSourceType, this.Characteristic.InputSourceType.HDMI);
-            tvService.addLinkedService(activeServices[val]);
+            tvService.addLinkedService(activeServices[i]);
         }
 
         /**
