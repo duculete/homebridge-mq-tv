@@ -1,7 +1,7 @@
 {
   "name": "homebridge-mq-tv",
   "main": "index.js",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Control your TV from Apple Homekit via MQTT",
   "keywords": [
     "homebridge-plugin",
