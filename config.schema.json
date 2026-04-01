@@ -1,5 +1,5 @@
 {
-	"pluginAlias": "homebridge-mq-tv",
+	"pluginAlias": "MqttTelevision",
 	"pluginType": "platform",
 	"singular": false,
 	"headerDisplay": "MQTT must be installed on your system",
@@ -41,7 +41,7 @@
 					"title": "MQTT port",
 					"type": "integer",
 					"placeholder": "1883",
-					"default": true
+					"default": 1883
 				}
 
 			}
