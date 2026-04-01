@@ -36,7 +36,10 @@ class TVPlatform {
         const inputList = this.config.inputs || [];
         this.pinghost = config.pinghost;
         this.model = config.model || "Custom MQTT TV";
-
+        var tvSerialNumber = packageJson.version || "0.0.1";
+        if (this.pinghost && this.pinghost.ip) {
+            tvSerialNumber = this.pinghost.ip.replace(/\./g, "-");
+        }
         const setActiveTopic = this.config.setActive || "";
         const getActiveTopic = this.config.getActive || "";
         const setActiveInputTopic = this.config.setActiveInput || "";
@@ -45,7 +48,7 @@ class TVPlatform {
         const settingsTopic = this.config.settingsTopic || "";
         const infoTopic = this.config.infoTopic || "";
 
-        if (!setActiveTopic || !getActiveTopic || !setActiveInputTopic || !getActiveInputTopic || !setRemoteKeyTopic || !settingsTopic || !infoTopic) {
+        if (!setActiveTopic || !getActiveTopic || !setActiveInputTopic || !getActiveInputTopic) {
             this.log("There is no MQTT topic configured for the TV " + tvName + ". Please check your configuration.");
             return false;
         }
@@ -62,9 +65,9 @@ class TVPlatform {
         // add the tv service
         const tvService = this.tvAccessory.addService(this.Service.Television);
 
-        tvService.setCharacteristic(this.Characteristic.Manufacturer, packageJson.name);
+        tvService.setCharacteristic(this.Characteristic.Manufacturer, this.config.manufacturer || "MQTT TV Homebridge Plugin");
         tvService.setCharacteristic(this.Characteristic.Model, this.model);
-        tvService.setCharacteristic(this.Characteristic.SerialNumber, packageJson.version);
+        tvService.setCharacteristic(this.Characteristic.SerialNumber, tvSerialNumber);
 
         // set the tv name
         tvService.setCharacteristic(this.Characteristic.ConfiguredName, tvName);
@@ -78,12 +81,18 @@ class TVPlatform {
         try {
             this.mqttClient = mqtt.connect(mqttHost, mqttOptions);
             this.mqttClient.publish(getActiveInputTopic, "");
-            this.mqttClient.subscribe(settingsTopic);
-            this.mqttClient.subscribe(infoTopic);
+            if (settingsTopic) {
+                this.mqttClient.subscribe(settingsTopic);
+            }
+            if (infoTopic) {
+                this.mqttClient.subscribe(infoTopic);
+            }
             this.mqttClient.subscribe(getActiveInputTopic);
 
             if (this.pinghost) {
-                this.mqttClient.publish(settingsTopic, "DISABLE_STATUS_CHECK");
+                if (settingsTopic) {
+                    this.mqttClient.publish(settingsTopic, "DISABLE_STATUS_CHECK");
+                }
                 setInterval(() => {
                     ping.promise.probe(this.pinghost.ip)
                         .then(function (res, err) {
@@ -96,7 +105,7 @@ class TVPlatform {
                                     ping_resp = 1;
                                 }
                                 tvService
-                                    .getCharacteristic(Characteristic.Active).updateValue(ping_resp);
+                                    .getCharacteristic(that.Characteristic.Active).updateValue(ping_resp);
                                 that.mqttClient.publish(getActiveTopic, ping_resp.toString());
                             }
                         });
@@ -120,7 +129,7 @@ class TVPlatform {
                 var msg = message.toString();
                 if (msg == "") {
                     this.log.info('Settings requested!');
-                    if (this.pinghost) {
+                    if (this.pinghost && settingsTopic) {
                         this.mqttClient.publish(settingsTopic, "DISABLE_STATUS_CHECK");
                     }
                 }
@@ -151,7 +160,7 @@ class TVPlatform {
         // handle on / off events using the Active(POWER) characteristic
         tvService.getCharacteristic(this.Characteristic.Active)
             .onSet((newValue) => {
-                if (newValue != tvService.getCharacteristic(this.Characteristic.Active.value)) {
+                if (newValue != tvService.getCharacteristic(this.Characteristic.Active).value) {
                     this.mqttClient.publish(setActiveTopic, newValue.toString());
                 }
             });
@@ -165,6 +174,9 @@ class TVPlatform {
         // handle remote control input
         tvService.getCharacteristic(this.Characteristic.RemoteKey)
             .onSet((newValue) => {
+                if (!setRemoteKeyTopic) {
+                    return;
+                }
                 switch (newValue) {
                     case this.Characteristic.RemoteKey.REWIND: {
                         this.mqttClient.publish(setRemoteKeyTopic, 'REWIND');
@@ -234,6 +246,9 @@ class TVPlatform {
         // handle volume control
         speakerService.getCharacteristic(this.Characteristic.VolumeSelector)
             .onSet((newValue) => {
+                if (!setRemoteKeyTopic) {
+                    return;
+                }
                 var val = "VOLUME_UP";
                 if (newValue == 1) {
                     val = "VOLUME_DOWN";
@@ -244,6 +259,9 @@ class TVPlatform {
         // handle mute
         speakerService.getCharacteristic(this.Characteristic.Mute)
             .onSet((newValue) => {
+                if (!setRemoteKeyTopic) {
+                    return;
+                }
                 var val = "MUTE";
                 this.mqttClient.publish(setRemoteKeyTopic, val);
             });
@@ -255,17 +273,15 @@ class TVPlatform {
          * is sent to the TV Service ActiveIdentifier Characteristic handler.
          */
 
-        const activeServices = [];
-
         for (var i = 0; i < inputList.length; i++) {
-            var val = inputList[i]['value'].toString();
-            activeServices[i] = this.tvAccessory.addService(this.Service.InputSource, inputList[i]['value'].toString(), inputList[i]['name'].toString());
-            activeServices[i]
+            var that = this;
+            const inputCh = this.tvAccessory.addService(this.Service.InputSource, inputList[i]['value'].toString().replace("_", "-"), inputList[i]['name'].toString());
+            inputCh
                 .setCharacteristic(this.Characteristic.Identifier, i + 1)
                 .setCharacteristic(this.Characteristic.ConfiguredName, inputList[i]['name'].toString())
                 .setCharacteristic(this.Characteristic.IsConfigured, this.Characteristic.IsConfigured.CONFIGURED)
                 .setCharacteristic(this.Characteristic.InputSourceType, this.Characteristic.InputSourceType.HDMI);
-            tvService.addLinkedService(activeServices[i]);
+            tvService.addLinkedService(inputCh);
         }
 
         /**
