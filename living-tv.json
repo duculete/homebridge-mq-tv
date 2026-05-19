@@ -1,0 +1,50 @@
+{
+            "platform": "MqttTelevision",
+            "name": "Livingroom TV",
+            "mqtt": {
+                "server": "10.8.1.48",
+                "port": 1883
+            },
+            "setActive": "home/living/tv/cmd/power",
+            "getActive": "home/living/tv/power",
+            "setActiveInput": "home/living/tv/cmd/input",
+            "getActiveInput": "home/living/tv/input",
+            "setRemoteKey": "home/living/tv/cmd/remote",
+            "settingsTopic": "home/living/tv/settings",
+            "infoTopic": "home/living/tv/info",
+            "inputs": [
+                {
+                    "name": "TV",
+                    "value": "TV"
+                },
+                {
+                    "name": "Media",
+                    "value": "HDMI1"
+                },
+                {
+                    "name": "Camera",
+                    "value": "HDMI2"
+                },
+                {
+                    "name": "Digi News",
+                    "value": "tv_news"
+                },
+                {
+                    "name": "ProTV",
+                    "value": "protv"
+                },
+                {
+                    "name": "Comedy",
+                    "value": "comedy"
+                },
+                {
+                    "name": "Digi World",
+                    "value": "digiworld"
+                }
+            ],
+            "_bridge": {
+                "username": "0E:ED:B2:E7:5B:BB",
+                "port": 33529,
+                "name": "Livingroom TV Bridge"
+            }
+        },
