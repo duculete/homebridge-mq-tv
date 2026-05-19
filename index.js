@@ -293,3 +293,4 @@ class TVPlatform {
         this.api.publishExternalAccessories(PLUGIN_NAME, [this.tvAccessory]);
     }
 }
+
